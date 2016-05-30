@@ -12,12 +12,23 @@ class MoviesController < ApplicationController
 
   def index
 		@all_ratings = Movie.ratings
-    @orderBy = params[:orderBy] || "id"
-  	if params[:ratings].nil?
-			@ratings = @all_ratings
+		
+		if params[:ratings].respond_to? 'keys'
+			@ratings = params[:ratings].keys 
 		else
-			@ratings = params[:ratings].keys
+			@ratings = params[:ratings] || session[:ratings] || @all_ratings
 		end
+			
+    @orderBy = params[:orderBy] || session[:orderBy] || "title"
+		
+		#save user settings in session
+		session[:orderBy] = @orderBy
+		session[:ratings] = @ratings
+
+		if (params[:ratings].nil? || params[:orderBy].nil?) && (session[:orderBy] != nil && session[:ratings] != nil)
+			redirect_to movies_path(orderBy: session[:orderBy], ratings: session[:ratings])
+		end
+		# database query
 		@movies = Movie.where(rating: @ratings).order(@orderBy + " asc")
   end
 
