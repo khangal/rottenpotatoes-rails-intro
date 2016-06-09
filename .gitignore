@@ -16,3 +16,6 @@
 !/log/.keep
 /tmp
 log
+*~
+*.swp
+*.swo
