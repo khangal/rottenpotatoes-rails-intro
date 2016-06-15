@@ -14,7 +14,13 @@ end
 Then /I should see "(.*)" before "(.*)"/ do |e1, e2|
   #  ensure that that e1 occurs before e2.
   #  page.body is the entire content of the page as a string.
-  flunk "Unimplemented"
+  
+  # first try
+  # titles = page.all("table#movies tbody tr td[1]").map {|td| td.text}
+  # titles.index(e1).should < titles.index(e2)
+  
+  # second try
+  /#{e1}.*?#{e2}/m.should match(page.body)
 end
 
 # Make it easier to express checking or unchecking several boxes at once
